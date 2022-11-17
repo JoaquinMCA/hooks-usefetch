@@ -4,8 +4,8 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).\
 You can do the test on: `https://stackblitz.com/edit/react-ts`\
-You can also initiate a new blanck project for the test in your local machine running:
-`npm install on the start-test branch` but is recomended to start with this repository branch (start-test) for a cleaner setup.
+You can also initiate a new blanck project for the test in your local machine running: `npx create-react-app hooks-usefetch --template typescript`.\
+Nevertheless is recomended to start with this repository branch (start-test) for a cleaner setup.
 
 ### Objective
 
