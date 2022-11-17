@@ -4,14 +4,20 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).\
 You can do the test on: `https://stackblitz.com/edit/react-ts`\
-You can also initiate a new blanck project for the test in your local machine running:
-`npm install on the start-test branch` but is recomended to start with this repository branch (start-test) for a cleaner setup.
+You can also initiate a new blanck project for the test in your local machine running: `npx create-react-app hooks-usefetch --template typescript`.\
+Nevertheless is recomended to start with this repository branch (start-test) for a cleaner setup.
 
 ### Objective
 
 The goal of this test is to give an oportunity to the candidate to show knowledge about React hooks and custom hooks displaying the information in: `https://swapi.dev/api/people`\
 The stimated time for the test is 20 minutes.
 
+### Available branches
+
+`main`: Contains a more extended solution, retrieving all the information of each person including the lists.\
+`basic-solution`: Displais the list and the basic details of each person.\
+`start-test`: Contains a blanck project ready to start the test.
+<br/><br/>
 ## Available Scripts
 
 In the project directory, you can run:
