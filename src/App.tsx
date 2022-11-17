@@ -1,7 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react";
+
+import { PeopleList, Person, PaginatorDirections } from "./types";
+import { StringList } from "./components/string-list";
+import useFetch from "./hooks/useFetch";
+
 import "./styles.css";
-import { PeopleList, Person } from "./types";
-import useFetch from "./useFetch";
 
 const App = () => {
   const swapiUrl = "https://swapi.dev/api/people";
@@ -10,10 +13,12 @@ const App = () => {
   const [url, setUrl] = useState(swapiUrl);
   const [selectedModel, setSelectedModel] = useState<Person>();
   const [modelList, setModelList] = useState<PeopleList>();
+  const [currentPage, setCurrentPage] = useState<number>(0);
+  const [currentPageDirection, setCurrentPageDirection] =
+    useState<PaginatorDirections>("forwards");
 
-  const [modelFilms, setModelFilms] = useState<any[]>([]);
-
-  const { data, loading, error, sendRequest, reqType } = useFetch();
+  const { data, loading, error, sendRequest, reqType, sendRequests } =
+    useFetch();
 
   /**
    * Get the people data each time url changes.
@@ -43,10 +48,32 @@ const App = () => {
   }, [data, loading, error, reqType]);
 
   /**
+   * Set the current page when the new list is received.
+   */
+  useEffect(() => {
+    if (!loading && !error && data) {
+      switch (reqType) {
+        case "list": {
+          setCurrentPage((prevValue) => {
+            return currentPageDirection === "backwards"
+              ? (prevValue -= 1)
+              : (prevValue += 1);
+          });
+          break;
+        }
+
+        default:
+          break;
+      }
+    }
+  }, [data, loading, error, reqType]);
+
+  /**
    * Fetches the next/previous list of people.
    */
   const paginatorHandler = useCallback(
-    (url: string) => {
+    (url: string, direction: PaginatorDirections) => {
+      setCurrentPageDirection(direction);
       sendRequest(url, "list");
     },
     [sendRequest]
@@ -66,7 +93,9 @@ const App = () => {
     <div className="App">
       <div className="header">
         <h2>{title}</h2>
-        <div className="loading-container">{loading && "Loading..."}</div>
+        <div className="loading-container">
+          {loading && <span className="loading-dots">Loading</span>}
+        </div>
       </div>
 
       <div className="error-container">
@@ -88,24 +117,32 @@ const App = () => {
             ))}
           </ul>
           <div className="list-footer">
-            <div className="paginator-buttons">
-              {modelList?.previous ? (
+            <div className="paginator">
+              {modelList?.previous && (
                 <button
                   onClick={() =>
                     paginatorHandler(
-                      modelList.previous ? modelList.previous : ""
+                      modelList.previous ? modelList.previous : "",
+                      "backwards"
                     )
                   }
                 >
                   {"<"}
                 </button>
-              ) : (
-                <div></div>
               )}
+
+              <div className="paginator__page-numbers">
+                {currentPage}/
+                {Math.ceil(modelList.count / modelList.results.length)}
+              </div>
+
               {modelList?.next ? (
                 <button
                   onClick={() =>
-                    paginatorHandler(modelList.next ? modelList.next : "")
+                    paginatorHandler(
+                      modelList.next ? modelList.next : "",
+                      "forwards"
+                    )
                   }
                 >
                   {">"}
@@ -120,7 +157,7 @@ const App = () => {
 
       {selectedModel && (
         <div className="model-details">
-          <h3>Details:</h3>
+          <h3> Details: </h3>
           <button
             className="close-details"
             onClick={() => setSelectedModel(undefined)}
@@ -148,6 +185,34 @@ const App = () => {
             </div>
             <div className="details__data">
               <b>Skin color:</b> {selectedModel.skin_color}
+            </div>
+            <div className="details__data">
+              <StringList
+                urls={selectedModel.films}
+                nameProperty={"title"}
+                title={"Films: "}
+              />
+            </div>
+            <div className="details__data">
+              <StringList
+                urls={selectedModel.species}
+                nameProperty={"name"}
+                title={"Species: "}
+              />
+            </div>
+            <div className="details__data">
+              <StringList
+                urls={selectedModel.starships}
+                nameProperty={"name"}
+                title={"Star ships: "}
+              />
+            </div>
+            <div className="details__data">
+              <StringList
+                urls={selectedModel.vehicles}
+                nameProperty={"name"}
+                title={"Vehicles: "}
+              />
             </div>
           </div>
           <div className="close-details">

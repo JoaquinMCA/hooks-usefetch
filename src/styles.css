@@ -18,6 +18,7 @@ ul.no-bullets {
 
 .loading-container {
   height: 12px;
+  width: 80px;
   margin-bottom: 0.5rem;
 }
 
@@ -32,10 +33,12 @@ ul.no-bullets {
   padding: 0 2rem;
 }
 
-.paginator-buttons {
-  width: 64px;
+.paginator {
   display: flex;
-  justify-content: space-between;
+}
+
+.paginator__page-numbers {
+  margin: 0 0.5rem;
 }
 
 .model-details__container {
@@ -50,4 +53,28 @@ ul.no-bullets {
   position: absolute;
   top: 0.25rem;
   right: 2rem;
+}
+
+.loading-dots::after {
+  display: inline-block;
+  animation: loading-dots steps(1, end) 1s infinite;
+  content: "";
+}
+
+@keyframes loading-dots {
+  0% {
+    content: "";
+  }
+  25% {
+    content: ".";
+  }
+  50% {
+    content: "..";
+  }
+  75% {
+    content: "...";
+  }
+  100% {
+    content: "";
+  }
 }

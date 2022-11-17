@@ -12,6 +12,12 @@ Nevertheless is recomended to start with this repository branch (start-test) for
 The goal of this test is to give an oportunity to the candidate to show knowledge about React hooks and custom hooks displaying the information in: `https://swapi.dev/api/people`\
 The stimated time for the test is 20 minutes.
 
+### Available branches
+
+`main`: Contains a more extended solution, retrieving all the information of each person including the lists.\
+`basic-solution`: Displais the list and the basic details of each person.\
+`start-test`: Contains a blanck project ready to start the test.
+<br/><br/>
 ## Available Scripts
 
 In the project directory, you can run:
