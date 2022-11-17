@@ -6,6 +6,7 @@ const useFetch = () => {
   const [data, setData] = useState<any>();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+  const [errors, setErrors] = useState<any[]>([]);
   const [reqType, setReqType] = useState<ReqType>();
 
   const sendRequest = useCallback((url: string, requestType: ReqType) => {
@@ -37,42 +38,52 @@ const useFetch = () => {
     setReqType(requestType);
 
     const promises: Promise<any>[] = [];
-
+    let i = 0;
     urls.map((url) => {
       const promise = fetch(url, {
         headers: {
           "Content-Type": "application/json",
         },
       })
-        .then((res) => res.json())
         .then((res) => {
-          if (res.error) {
-            // setError(true);
-            console.log(res.error);
+          if (res.status === 200) {
+            return res.json();
           } else {
-            // setData(res);
+            setError(true);
+            setErrors((prevValue) => {
+              return [...prevValue, res.status + "-" + res.statusText];
+            });
+          }
+        })
+        .then((res) => {
+          if (res?.error) {
+            setError(true);
+            setErrors((prevValue) => {
+              return [...prevValue, error];
+            });
+          } else {
             return res;
           }
         })
         .catch((err) => {
-          // setError(true);
-          console.log(err);
-          return err;
+          setError(true);
+          setErrors((prevValue) => {
+            return [...prevValue, err];
+          });
         });
 
       promises.push(promise);
+      i++;
     });
 
     Promise.all(promises)
       .then((result) => {
-        console.log("resultados obtenidos en grupo");
-        console.log(result);
-        setData(result);
+        setData(result.filter((res) => res !== undefined));
       })
       .finally(() => setLoading(false));
   }, []);
 
-  return { data, loading, error, sendRequest, reqType, sendRequests };
+  return { data, loading, error, sendRequest, reqType, sendRequests, errors };
 };
 
 export default useFetch;
