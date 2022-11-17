@@ -17,15 +17,14 @@ const App = () => {
   const [currentPageDirection, setCurrentPageDirection] =
     useState<PaginatorDirections>("forwards");
 
-  const { data, loading, error, sendRequest, reqType, sendRequests } =
-    useFetch();
+  const { data, loading, error, sendRequest, reqType } = useFetch();
 
   /**
    * Get the people data each time url changes.
    */
   useEffect(() => {
     sendRequest(url, "list");
-  }, [url, sendRequest]);
+  }, []);
 
   /**
    * React to list or details retrieved data.
@@ -54,11 +53,12 @@ const App = () => {
     if (!loading && !error && data) {
       switch (reqType) {
         case "list": {
-          setCurrentPage((prevValue) => {
-            return currentPageDirection === "backwards"
-              ? (prevValue -= 1)
-              : (prevValue += 1);
-          });
+          modelList &&
+            setCurrentPage((prevValue) => {
+              return currentPageDirection === "backwards"
+                ? (prevValue -= 1)
+                : (prevValue += 1);
+            });
           break;
         }
 
